@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Виктория Мыльникова — креативный маркетолог, Marketing Director</title>
+  <meta name="description" content="Виктория Мыльникова, креативный маркетолог и Marketing Director. Придумываю маркетинг, который хочется заметить — и который работает на бизнес.">
+  <meta name="theme-color" content="#F7F4EE">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Enables reveal-on-scroll styles only when JS runs, before first paint. -->
+  <script>document.documentElement.classList.add('js');</script>
+  <script src="js/config.js" defer></script>
+  <script src="content/site.js" defer></script>
+  <script src="content/cases.js" defer></script>
+  <script src="content/reviews.js" defer></script>
+  <script src="js/dom.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <header class="site-header" data-header>
+    <div class="container site-header__inner">
+      <a class="site-header__brand" href="#top">Виктория Мыльникова</a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="nav-toggle__line"></span>
+        <span class="nav-toggle__line"></span>
+        <span class="visually-hidden">Меню</span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Основная навигация" data-nav>
+        <ul class="site-nav__list">
+          <li><a class="site-nav__link" href="#about">Обо мне</a></li>
+          <li><a class="site-nav__link" href="#expertise">Экспертиза</a></li>
+          <li><a class="site-nav__link" href="#cases">Кейсы</a></li>
+          <li><a class="site-nav__link" href="#reviews">Отзывы</a></li>
+          <li><a class="site-nav__link" href="#contact">Контакты</a></li>
+        </ul>
+        <a class="button button--primary site-nav__cta" href="#contact">Обсудить задачу</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="container hero__grid">
+        <div class="hero__intro">
+          <p class="eyebrow" data-hero-role data-reveal>Креативный маркетолог / <span class="nowrap">Marketing Director</span></p>
+          <h1 class="hero__name" id="hero-title" data-hero-name data-reveal style="--reveal-delay: 80ms">
+            <span class="hero__name-line">Виктория</span>
+            <span class="hero__name-line hero__name-line--offset">Мыльникова</span>
+          </h1>
+          <p class="hero__headline" data-hero-headline data-reveal style="--reveal-delay: 200ms">
+            Придумываю маркетинг, который хочется
+            <span class="mark">заметить<svg class="mark__stroke" viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M3 10C46 4.5 104 3 197 7" pathLength="1"/></svg></span>&nbsp;— и&nbsp;который работает на&nbsp;бизнес.
+          </p>
+          <div class="hero__actions" data-reveal style="--reveal-delay: 320ms">
+            <a class="button button--primary" href="#contact" data-hero-cta="primary">Обсудить задачу <span class="button__arrow" aria-hidden="true">→</span></a>
+            <a class="button" href="#cases" data-hero-cta="secondary">Смотреть кейсы</a>
+          </div>
+        </div>
+
+        <figure class="portrait" data-portrait data-reveal style="--reveal-delay: 160ms">
+          <div class="portrait__frame">
+            <!-- Portrait: set hero.portrait in content/site.js — the image replaces this placeholder.
+                 Composition expects a vertical 4:5 shot. -->
+            <div class="portrait__placeholder" aria-hidden="true">
+              <span class="portrait__monogram">В<i>М</i></span>
+              <span class="portrait__label">Portrait / Victoria Mylnikova</span>
+              <span class="portrait__ratio">4 : 5</span>
+            </div>
+          </div>
+          <figcaption class="portrait__caption" data-hero-tagline>Маркетинг без скучных решений.</figcaption>
+        </figure>
+
+        <ul class="hero__facts" data-hero-facts aria-label="Коротко обо мне"></ul>
+      </div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <header class="section-header section-header--label" data-reveal>
+          <span class="section-header__index">01</span>
+          <h2 class="section-header__title" id="about-title">Обо мне</h2>
+        </header>
+        <div class="about">
+          <p class="about__statement" data-about-statement>
+            <span class="about__word" data-reveal>Стратегия.</span>
+            <span class="about__word" data-reveal style="--reveal-delay: 90ms">Креатив.</span>
+            <span class="about__word" data-reveal style="--reveal-delay: 180ms">Люди.</span>
+            <span class="about__word about__word--accent" data-reveal style="--reveal-delay: 270ms">Результат.</span>
+          </p>
+          <div class="about__aside placeholder" data-about-text data-reveal>
+            <span class="placeholder__label">Текст готовится</span>
+            <p>Здесь будет рассказ о&nbsp;пути, подходе и&nbsp;принципах работы — после согласования финального текста.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="expertise" aria-labelledby="expertise-title">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="section-header__index">02</span>
+          <h2 class="section-header__title" id="expertise-title">Экспертиза</h2>
+        </header>
+        <ol class="expertise" data-expertise-list></ol>
+        <aside class="special" data-expertise-special hidden></aside>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="cases" aria-labelledby="cases-title">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="section-header__index">03</span>
+          <h2 class="section-header__title" id="cases-title">Кейсы</h2>
+          <p class="section-header__lead">B2B и&nbsp;B2C, четыре отрасли. Подробные материалы по&nbsp;каждому кейсу готовятся к&nbsp;публикации.</p>
+        </header>
+        <div class="cases-grid" data-cases-list>
+          <noscript><p class="placeholder">Для просмотра кейсов включите JavaScript.</p></noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="approach" aria-labelledby="approach-title">
+      <div class="container">
+        <header class="section-header section-header--label" data-reveal>
+          <span class="section-header__index">04</span>
+          <h2 class="section-header__title" id="approach-title">Подход к&nbsp;работе</h2>
+        </header>
+        <div class="approach">
+          <ol class="approach__list" data-approach-list></ol>
+          <div class="approach__note placeholder" data-reveal>
+            <span class="placeholder__label">Описание этапов готовится</span>
+            <p>От задачи бизнеса — к&nbsp;идее, команде, реализации и&nbsp;результату.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="reviews" aria-labelledby="reviews-title">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="section-header__index">05</span>
+          <h2 class="section-header__title" id="reviews-title">Отзывы</h2>
+        </header>
+        <div class="reviews-list" data-reviews-list>
+          <!-- Placeholder mirrors the future review layout; replaced once content/reviews.js has published items. -->
+          <figure class="review review--placeholder" data-reveal>
+            <span class="review__mark" aria-hidden="true">“</span>
+            <p class="review__text">Отзывы появятся здесь после согласования с&nbsp;клиентами.</p>
+            <figcaption class="review__author" aria-hidden="true">
+              <span class="review__photo"></span>
+              <span class="review__who">
+                <span class="review__skeleton"></span>
+                <span class="review__skeleton review__skeleton--wide"></span>
+              </span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section inverse contact" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="section-header section-header--label" data-reveal>
+          <span class="section-header__index">06</span>
+          <span class="section-header__title">Контакты</span>
+        </div>
+        <h2 class="contact__title" id="contact-title" data-reveal>Есть задача, которую пора решить?</h2>
+
+        <div class="contact__grid">
+          <div class="contact__aside" data-reveal>
+            <p class="contact__lead">Расскажите о&nbsp;задаче — в&nbsp;Telegram, по&nbsp;телефону, почте или через форму.</p>
+            <a class="button button--primary" href="#lead-name" data-telegram-link>Обсудить задачу <span class="button__arrow" aria-hidden="true">→</span></a>
+            <ul class="contact-list" data-contact-list></ul>
+          </div>
+
+          <form class="contact-form" data-contact-form novalidate data-reveal style="--reveal-delay: 120ms">
+            <div class="field">
+              <label class="field__label" for="lead-name">Имя <span aria-hidden="true">*</span></label>
+              <input class="field__input" id="lead-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="lead-name-error">
+              <p class="field__error" id="lead-name-error" data-field-error="name"></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="lead-phone">Телефон <span aria-hidden="true">*</span></label>
+              <input class="field__input" id="lead-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" required aria-describedby="lead-phone-error">
+              <p class="field__error" id="lead-phone-error" data-field-error="phone"></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="lead-message">Сообщение <span aria-hidden="true">*</span></label>
+              <textarea class="field__input" id="lead-message" name="message" rows="4" maxlength="2000" required aria-describedby="lead-message-error"></textarea>
+              <p class="field__error" id="lead-message-error" data-field-error="message"></p>
+            </div>
+            <button class="button contact-form__submit" type="submit">Отправить <span class="button__arrow" aria-hidden="true">→</span></button>
+            <p class="contact-form__status" role="status" data-form-status></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div class="site-footer__brand">
+        <a class="site-footer__name" href="#top">Виктория Мыльникова</a>
+        <p>Креативный маркетолог / Marketing Director</p>
+      </div>
+      <nav class="site-footer__nav" aria-label="Навигация в подвале">
+        <ul class="site-footer__links">
+          <li><a href="#about">Обо мне</a></li>
+          <li><a href="#expertise">Экспертиза</a></li>
+          <li><a href="#cases">Кейсы</a></li>
+          <li><a href="#reviews">Отзывы</a></li>
+          <li><a href="#contact">Контакты</a></li>
+        </ul>
+      </nav>
+      <ul class="contact-list contact-list--compact" data-contact-list></ul>
+      <div class="site-footer__bottom">
+        <span>© <span data-current-year></span> Виктория Мыльникова</span>
+        <a href="#top">Наверх ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mount point for the future AI assistant (VM.config.features.assistant). -->
+  <div data-assistant-root hidden></div>
+</body>
+</html>

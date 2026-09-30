@@ -1,0 +1,32 @@
+# Secrets — never commit (server/.env.example is the template)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Local Mac launchers: only for this computer, contain a local path, not part of the website
+*.app/
+
+# Backend runtime: virtualenv, database, caches, logs
+server/.venv/
+server/data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+__pycache__/
+*.pyc
+*.log
+
+# Tooling
+node_modules/
+.vscode/
+.idea/
