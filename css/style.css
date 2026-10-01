@@ -614,9 +614,10 @@ textarea {
    Hero
    ========================================================================== */
 
-/* Mobile: content starts close under the header; closes like any section. */
+/* Mobile: content starts close under the header; the proof strip closes the
+   hero with the same air as before a section marker. */
 .hero {
-  padding-block: var(--space-4) var(--section-space);
+  padding-block: var(--space-4) var(--section-lead);
 }
 
 .hero__grid {
@@ -686,24 +687,34 @@ textarea {
   margin-top: var(--space-3);
 }
 
+/* Proof strip: the four facts as standalone type blocks separated by space,
+   not table rules. A short gold mark opens each fact; the first (years in
+   marketing) reads one step stronger. */
 .hero__facts {
   display: grid;
-  border-top: 1px solid var(--color-border-strong);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--space-5);
 }
 
 .hero__fact {
-  padding-block: var(--space-4);
-  border-bottom: 1px solid var(--color-border);
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
   font-family: var(--font-display);
   font-size: var(--text-lg);
   line-height: 1.25;
 }
 
-/* Single column: the list ends without a trailing rule; the next section's marker follows. */
-@media (max-width: 639px) {
-  .hero__fact:last-child {
-    border-bottom: 0;
-  }
+.hero__fact::before {
+  content: "";
+  width: 1.5rem;
+  height: 1px;
+  background: var(--color-decor);
+}
+
+.hero__fact:first-child {
+  font-size: var(--text-xl);
+  line-height: 1.1;
 }
 
 @media (max-width: 639px) {
@@ -714,8 +725,7 @@ textarea {
 
 @media (min-width: 640px) {
   .hero__facts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-6);
+    column-gap: var(--space-7);
   }
 }
 
@@ -731,19 +741,23 @@ textarea {
   .hero__grid {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     column-gap: clamp(var(--space-7), 5vw, var(--space-9));
-    row-gap: var(--space-8);
+    row-gap: var(--space-7);
     align-items: end;
   }
 
+  /* Columns follow the length of each fact, so the years read on one line. */
   .hero__facts {
     grid-column: 1 / -1;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    border-bottom: 0;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(var(--space-6), 3.5vw, var(--space-8));
   }
 
   .hero__fact {
-    padding-right: var(--space-5);
-    border-bottom: 0;
+    font-size: clamp(1.25rem, 0.95rem + 0.55vw, 1.625rem);
+  }
+
+  .hero__fact:first-child {
+    font-size: var(--text-xl);
   }
 }
 
