@@ -60,6 +60,8 @@
   --space-8: 4.5rem;
   --space-9: 7rem;
   --section-space: clamp(4.5rem, 2.5rem + 5vw, 8rem);
+  /* Top space before the section marker on sections without their own background. */
+  --section-lead: clamp(3rem, 2rem + 3vw, 4.75rem);
 
   /* Layout */
   --container-max: 80rem;
@@ -236,8 +238,15 @@ textarea {
   padding-inline: var(--gutter);
 }
 
+/* Section rhythm: previous section closes (padding-bottom) → air → section marker
+   (its gold rule runs across the row) → content. Sections on their own background
+   (alt, inverse) and the one right after an alt section keep the full top space. */
 .section {
   padding-block: var(--section-space);
+}
+
+.section:not(.section--alt, .inverse, .section--alt + .section) {
+  padding-top: var(--section-lead);
 }
 
 .section--alt {
@@ -255,15 +264,15 @@ textarea {
   align-items: center;
   gap: var(--space-3);
   font-size: var(--text-xs);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--tracking-wide);
-  color: var(--color-text-muted);
+  color: var(--color-text);
 }
 
 /* A short gold rule — one of the few intended uses of the decorative colour. */
 .section-header__index::after {
   content: "";
-  width: 2.5rem;
+  width: 3.5rem;
   height: 1px;
   background: var(--color-decor);
 }
@@ -286,6 +295,26 @@ textarea {
   align-items: center;
   gap: var(--space-3);
   margin-bottom: var(--space-6);
+}
+
+/* «01 ─ ОБО МНЕ ──────»: the marker's gold rule continues after the title
+   to the end of the container, on the same centre line. */
+.section-header--label::after {
+  content: "";
+  flex: 1 1 0;
+  min-width: var(--space-5);
+  height: 1px;
+  background: var(--color-decor);
+}
+
+.section-header--label .section-header__title {
+  white-space: nowrap;
+}
+
+/* Headers with a large title: the number's rule fills its own row. */
+.section-header:not(.section-header--label) .section-header__index::after {
+  flex: 1 1 0;
+  min-width: 3.5rem;
 }
 
 .section-header--label .section-header__title {
@@ -585,8 +614,9 @@ textarea {
    Hero
    ========================================================================== */
 
+/* Mobile: content starts close under the header; closes like any section. */
 .hero {
-  padding-block: var(--space-6);
+  padding-block: var(--space-4) var(--section-space);
 }
 
 .hero__grid {
@@ -667,6 +697,13 @@ textarea {
   font-family: var(--font-display);
   font-size: var(--text-lg);
   line-height: 1.25;
+}
+
+/* Single column: the list ends without a trailing rule; the next section's marker follows. */
+@media (max-width: 639px) {
+  .hero__fact:last-child {
+    border-bottom: 0;
+  }
 }
 
 @media (max-width: 639px) {
