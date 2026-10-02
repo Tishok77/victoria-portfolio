@@ -18,13 +18,15 @@
  *   hero.ctaPrimary     { label, href }
  *   hero.ctaSecondary   { label, href }
  *   hero.portrait       Image | null    vertical 4:5, e.g. assets/images/portrait.jpg
- *   about.statement     string[]        big typographic line; the last word is italic
+ *   about.statement     string[]        big typographic line, joined with spaces; the last part is italic
  *   about.intro         Text | null     короткий вводный текст
  *   about.mainText      Text | null     основной текст
  *   about.secondaryText Text | null     дополнительный текст (необязательно)
  *   about.photo         Image | null    e.g. assets/images/about.jpg
+ *   expertise.intro     string | null   lead-in line above the list
  *   expertise.items     Array<{ number, title, description }>
- *   expertise.special   { label, title, description } | null   separate block
+ *   expertise.special   { label, title, description, note } | null   separate block;
+ *                       note — handwritten aside, «written» on first view
  *   approach            Array<{ number, title, text }>   text: Text | null (pending)
  */
 window.VM = window.VM || {};
@@ -41,7 +43,7 @@ window.VM.content.site = {
   hero: {
     name: 'Виктория Мыльникова',
     role: 'Креативный маркетолог / Marketing Director',
-    headline: 'Придумываю маркетинг, который хочется заметить — и который работает на бизнес.',
+    headline: 'Придумываю маркетинг, который хочется заметить — и который работает на бизнес',
     headlineAccent: 'заметить',
     tagline: 'Маркетинг без скучных решений.',
     facts: [
@@ -56,7 +58,8 @@ window.VM.content.site = {
   },
 
   about: {
-    statement: ['Стратегия.', 'Креатив.', 'Люди.', 'Результат.'],
+    // Joined with spaces: «От бизнес-задачи — к идее, от идеи — к результату.»
+    statement: ['От бизнес-задачи —', 'к идее,', 'от идеи —', 'к результату.'],
     intro: null,
     mainText: null,
     secondaryText: null,
@@ -64,6 +67,7 @@ window.VM.content.site = {
   },
 
   expertise: {
+    intro: 'Маркетинг работает сильнее, когда стратегия, креатив и реализация смотрят в одну сторону.',
     items: [
       {
         number: '01',
@@ -99,7 +103,8 @@ window.VM.content.site = {
     special: {
       label: 'Отдельное направление',
       title: 'Креативные спецпроекты',
-      description: 'Мероприятия, нестандартные рекламные кампании, коллаборации, визуальные концепции, спецпроекты.'
+      description: 'Мероприятия, нестандартные рекламные кампании, коллаборации, визуальные концепции, спецпроекты.',
+      note: 'Иногда лучший маркетинговый инструмент — это идея, которой до тебя никто не додумался'
     }
   },
 

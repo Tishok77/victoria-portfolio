@@ -105,17 +105,24 @@
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
-  // Hand-drawn emerald stroke under the headline accent (.mark in the CSS).
+  // Emerald brush stroke under the headline accent (.mark in the CSS): a filled
+  // shape — tapered start, fuller body, ragged bristle end, a thin dry streak.
+  // Keep in sync with the no-JS fallback in index.html.
+  const BRUSH_PATH = 'M1.5 12C18 10.1 46 8.2 82 7.3C118 6.4 158 6.2 189 6.8L194.5 5.6L192.4 7.6'
+    + 'L199.5 8.2L193.6 9.3L197.8 11.2L190.2 10.9C160 10.8 120 11 84 11.6C52 12.2 24 13.3 4.5 14.6'
+    + 'C2.3 14.8 .5 13.1 1.5 12ZM118 8.5C143 8.1 166 8.1 184 8.4L184 8.8C166 8.6 143 8.7 118 8.9Z'
+    + 'M150 9.9C168 9.7 180 9.8 189 10.1L189 10.4C180 10.2 168 10.2 150 10.3Z';
+
   function markStroke() {
     const svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('class', 'mark__stroke');
-    svg.setAttribute('viewBox', '0 0 200 14');
+    svg.setAttribute('viewBox', '0 0 200 16');
     svg.setAttribute('preserveAspectRatio', 'none');
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('focusable', 'false');
     const path = document.createElementNS(SVG_NS, 'path');
-    path.setAttribute('d', 'M3 10C46 4.5 104 3 197 7');
-    path.setAttribute('pathLength', '1');
+    path.setAttribute('fill-rule', 'evenodd');
+    path.setAttribute('d', BRUSH_PATH);
     svg.append(path);
     return svg;
   }
@@ -192,7 +199,7 @@
     if (statement && about.statement && about.statement.length) {
       const last = about.statement.length - 1;
       const words = about.statement.map((word, index) =>
-        el('span', index === last ? 'about__word about__word--accent' : 'about__word', word));
+        el('span', index === last ? 'about__word about__word--accent' : 'about__word', nbsp(word)));
       statement.replaceChildren(...words.flatMap((word, index) => (index ? [' ', word] : [word])));
       reveal(words, { step: 90 });
     }
@@ -214,8 +221,36 @@
     aside.replaceChildren(...children);
   }
 
+  // Handwritten aside: letters are «written» one by one when the block first
+  // appears (CSS: .special.is-visible .special__letter). Screen readers get the
+  // plain sentence; words never break across lines.
+  function handwritten(text, className) {
+    const node = el('p', className);
+    const letters = el('span', `${className}-ink`);
+    letters.setAttribute('aria-hidden', 'true');
+    let index = 0;
+    text.split(' ').forEach((word, wordIndex) => {
+      if (wordIndex) letters.append(' ');
+      const wordNode = el('span', `${className}-word`);
+      [...word].forEach((char) => {
+        const letter = el('span', 'special__letter', char);
+        letter.style.setProperty('--i', index++);
+        wordNode.append(letter);
+      });
+      letters.append(wordNode);
+    });
+    node.append(el('span', 'visually-hidden', text), letters);
+    return node;
+  }
+
   function renderExpertise(expertise) {
     if (!expertise) return;
+
+    const intro = document.querySelector('[data-expertise-intro]');
+    if (intro) {
+      intro.textContent = expertise.intro ? nbsp(expertise.intro) : '';
+      intro.hidden = !expertise.intro;
+    }
 
     const list = document.querySelector('[data-expertise-list]');
     if (list) {
@@ -233,12 +268,13 @@
 
     const special = document.querySelector('[data-expertise-special]');
     if (special && expertise.special) {
-      const { label, title, description } = expertise.special;
+      const { label, title, description, note } = expertise.special;
       special.replaceChildren(
         el('p', 'special__label', label),
         el('h3', 'special__title', title),
         el('p', 'special__text', description)
       );
+      if (note) special.append(handwritten(note, 'special__note'));
       special.hidden = false;
       reveal([special]);
     }

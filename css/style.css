@@ -30,11 +30,12 @@
   --color-decor: var(--color-gold);
   --color-error: #A23B2A;
   --color-focus: var(--color-emerald);
-  --color-button-hover: #333230;
 
   /* Typography */
   --font-display: "Cormorant Garamond", "Times New Roman", Georgia, serif;
   --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Handwritten asides only (special projects note). */
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
 
   --text-xs: 0.8125rem;
   --text-sm: 0.9375rem;
@@ -42,7 +43,10 @@
   --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
   --text-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
   --text-2xl: clamp(2.5rem, 1.6rem + 3.6vw, 5rem);
-  --text-display: clamp(3.25rem, 1.4rem + 7.4vw, 8.5rem);
+  /* One size for every large editorial heading inside sections — clearly below the hero name. */
+  --text-editorial: clamp(2.5rem, 1.5rem + 3.6vw, 4.75rem);
+  /* Section markers «01 ─ ОБО МНЕ ───». */
+  --text-marker: clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
 
   --leading-tight: 1.02;
   --leading-snug: 1.25;
@@ -75,6 +79,7 @@
   --duration-fast: 160ms;
   --duration-base: 280ms;
   --duration-slow: 900ms;
+  --expertise-hover: 600ms;
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -92,7 +97,6 @@
   --color-border-strong: rgba(247, 244, 238, 0.42);
   --color-error: #E8A090;
   --color-focus: var(--color-ivory);
-  --color-button-hover: #FFFFFF;
   background: var(--color-bg);
   color: var(--color-text);
 }
@@ -176,11 +180,21 @@ a {
   color: inherit;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-base) var(--ease-out);
 }
 
-a:hover {
-  color: var(--color-accent);
+/* Text links: Muted Gold while interacting. Hover only where a pointer can hover
+   (no sticky hover on touch); tap gives :active; keyboard gives :focus-visible.
+   Buttons and whole-card links keep their own states. */
+a:not(.button, .case-card):active,
+a:not(.button, .case-card):focus-visible {
+  color: var(--color-decor);
+}
+
+@media (hover: hover) {
+  a:not(.button, .case-card):hover {
+    color: var(--color-decor);
+  }
 }
 
 button,
@@ -253,17 +267,31 @@ textarea {
   background: var(--color-bg-alt);
 }
 
+/* Every section opens with the same marker row:
+   «01 ─ НАЗВАНИЕ ──────────» — number, short gold rule, title, and the gold
+   rule continued to the end of the container, on one centre line.
+   An optional lead (cases) drops to its own line below. */
 .section-header {
-  display: grid;
-  gap: var(--space-4);
-  margin-bottom: clamp(var(--space-7), 2rem + 3vw, var(--space-8));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: clamp(var(--space-6), 1.5rem + 2vw, var(--space-7));
+}
+
+.section-header::after {
+  content: "";
+  flex: 1 1 0;
+  min-width: var(--space-5);
+  height: 1px;
+  background: var(--color-decor);
 }
 
 .section-header__index {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-size: var(--text-xs);
+  font-size: var(--text-marker);
   font-weight: 600;
   letter-spacing: var(--tracking-wide);
   color: var(--color-text);
@@ -278,65 +306,22 @@ textarea {
 }
 
 .section-header__title {
-  font-size: var(--text-2xl);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.015em;
-}
-
-.section-header__lead {
-  max-width: 28rem;
-  color: var(--color-text-muted);
-}
-
-/* Label variant: the section's big typography lives in its content instead. */
-.section-header--label {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-}
-
-/* «01 ─ ОБО МНЕ ──────»: the marker's gold rule continues after the title
-   to the end of the container, on the same centre line. */
-.section-header--label::after {
-  content: "";
-  flex: 1 1 0;
-  min-width: var(--space-5);
-  height: 1px;
-  background: var(--color-decor);
-}
-
-.section-header--label .section-header__title {
-  white-space: nowrap;
-}
-
-/* Headers with a large title: the number's rule fills its own row. */
-.section-header:not(.section-header--label) .section-header__index::after {
-  flex: 1 1 0;
-  min-width: 3.5rem;
-}
-
-.section-header--label .section-header__title {
   font-family: var(--font-body);
-  font-size: var(--text-xs);
+  font-size: var(--text-marker);
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
-@media (min-width: 960px) {
-  /* Columns match the expertise rows below: 12rem index + --space-6 gap. */
-  .section-header:not(.section-header--label) {
-    grid-template-columns: 12rem minmax(0, 1fr) minmax(0, 24rem);
-    column-gap: var(--space-6);
-    align-items: baseline;
-  }
-
-  .section-header__lead {
-    justify-self: end;
-  }
+/* Full row so it always wraps under the marker; the text itself stays ~28rem wide. */
+.section-header__lead {
+  order: 1;
+  flex-basis: 100%;
+  padding-right: max(0px, calc(100% - 28rem));
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
 }
 
 /* ==========================================================================
@@ -387,19 +372,24 @@ textarea {
     color var(--duration-base) var(--ease-out);
 }
 
-.button:hover {
-  background: var(--color-text);
-  color: var(--color-bg);
+/* Both buttons share one interaction state: Emerald fill, light text. */
+.button:not(:disabled):active,
+.button:not(:disabled):focus-visible {
+  background: var(--color-emerald);
+  border-color: var(--color-emerald);
+  color: var(--color-ivory);
+}
+
+@media (hover: hover) {
+  .button:not(:disabled):hover {
+    background: var(--color-emerald);
+    border-color: var(--color-emerald);
+    color: var(--color-ivory);
+  }
 }
 
 .button--primary {
   background: var(--color-text);
-  color: var(--color-bg);
-}
-
-.button--primary:hover {
-  background: var(--color-button-hover);
-  border-color: var(--color-button-hover);
   color: var(--color-bg);
 }
 
@@ -460,10 +450,6 @@ textarea {
   letter-spacing: 0.01em;
   text-decoration: none;
   white-space: nowrap;
-}
-
-.site-header__brand:hover {
-  color: inherit;
 }
 
 /* Standalone header CTA (pages without the full navigation). */
@@ -583,7 +569,7 @@ textarea {
     gap: var(--space-5);
   }
 
-  /* Underline grows from the left on hover — no colour change. */
+  /* Underline grows from the left on hover; colour turns Muted Gold (see a:hover). */
   .site-nav__link {
     display: inline;
     padding-block: var(--space-1);
@@ -591,15 +577,17 @@ textarea {
     background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
     font-family: var(--font-body);
     font-size: var(--text-sm);
-    transition: background-size var(--duration-base) var(--ease-out);
+    transition:
+      color var(--duration-base) var(--ease-out),
+      background-size var(--duration-base) var(--ease-out);
   }
 
   .site-nav__link::before {
     content: none;
   }
 
-  .site-nav__link:hover {
-    color: inherit;
+  .site-nav__link:hover,
+  .site-nav__link:focus-visible {
     background-size: 100% 1px;
   }
 
@@ -646,6 +634,11 @@ textarea {
   padding-left: 0.5em;
 }
 
+/* Role line above the name: Emerald, otherwise the standard eyebrow. */
+.hero .eyebrow {
+  color: var(--color-emerald);
+}
+
 .hero__headline {
   max-width: 21em;
   font-family: var(--font-display);
@@ -662,22 +655,17 @@ textarea {
 .mark__stroke {
   position: absolute;
   left: -3%;
-  bottom: -0.14em;
+  bottom: -0.25em;
   width: 106%;
-  height: 0.32em;
+  height: 0.5em;
   overflow: visible;
-  color: var(--color-accent);
+  color: var(--color-emerald);
   pointer-events: none;
 }
 
+/* A filled brush shape (see BRUSH_PATH in js/main.js), not a uniform line. */
 .mark__stroke path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-  vector-effect: non-scaling-stroke;
+  fill: currentColor;
 }
 
 .hero__actions {
@@ -743,6 +731,27 @@ textarea {
     column-gap: clamp(var(--space-7), 5vw, var(--space-9));
     row-gap: var(--space-7);
     align-items: end;
+  }
+
+  /* The text column spans the portrait: role and name start level with its
+     top; headline and CTAs settle so the buttons end level with the portrait's
+     bottom edge (the bottom padding skips the caption under the portrait). */
+  .hero__intro {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    padding-bottom: calc(var(--text-lg) * 1.6 + var(--space-4));
+  }
+
+  .hero__headline {
+    margin-top: auto;
+  }
+
+  /* Desktop CTAs scaled to the hero: taller, roomier, slightly larger type. */
+  .hero__actions .button {
+    min-height: 3.75rem;
+    padding-inline: var(--space-7);
+    font-size: 1rem;
   }
 
   /* Columns follow the length of each fact, so the years read on one line. */
@@ -885,7 +894,7 @@ textarea {
 
 .about__statement {
   font-family: var(--font-display);
-  font-size: var(--text-display);
+  font-size: var(--text-editorial);
   line-height: 0.98;
   letter-spacing: -0.025em;
 }
@@ -949,10 +958,6 @@ textarea {
    Expertise
    ========================================================================== */
 
-.expertise {
-  border-top: 1px solid var(--color-border-strong);
-}
-
 .expertise__item {
   position: relative;
   display: grid;
@@ -960,6 +965,23 @@ textarea {
   gap: var(--space-2) var(--space-3);
   padding-block: var(--space-5) var(--space-6);
   border-bottom: 1px solid var(--color-border);
+}
+
+/* Lead-in line before the list: present, but quieter than the list titles. */
+/* Uses the full container width at every size (it opens the whole section);
+   slightly smaller than the large editorial lines. Wide screens: about one
+   line; narrower ones wrap naturally, without a stranded last word. */
+.expertise__intro {
+  margin-bottom: clamp(var(--space-5), 1rem + 2vw, var(--space-7));
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 0.85rem + 1vw, 1.75rem);
+  font-style: italic;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+@media (min-width: 960px) {
+  /* Starts on the same column as the competence titles below. */
 }
 
 /* Emerald rule drawn across the row on hover. */
@@ -973,7 +995,7 @@ textarea {
   background: var(--color-accent);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--duration-slow) var(--ease-out);
+  transition: transform var(--expertise-hover) var(--ease-out);
 }
 
 .expertise__index {
@@ -983,7 +1005,7 @@ textarea {
   font-style: italic;
   line-height: 1;
   color: var(--color-text-muted);
-  transition: color var(--duration-base) var(--ease-out);
+  transition: color var(--expertise-hover) var(--ease-out);
 }
 
 .expertise__title {
@@ -991,7 +1013,9 @@ textarea {
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.01em;
-  transition: transform var(--duration-base) var(--ease-out);
+  transition:
+    color var(--expertise-hover) var(--ease-out),
+    transform var(--expertise-hover) var(--ease-out);
 }
 
 .expertise__text {
@@ -1000,12 +1024,26 @@ textarea {
   color: var(--color-text-muted);
 }
 
+/* One interactive state for the whole row: rule, number and title change
+   together, with the same timing. :active gives the same state on tap. */
+.expertise__item:active::before {
+  transform: scaleX(1);
+}
+
+.expertise__item:active :is(.expertise__index, .expertise__title) {
+  color: var(--color-accent);
+}
+
+.expertise__item:active .expertise__title {
+  transform: translateX(0.5rem);
+}
+
 @media (hover: hover) {
   .expertise__item:hover::before {
     transform: scaleX(1);
   }
 
-  .expertise__item:hover .expertise__index {
+  .expertise__item:hover :is(.expertise__index, .expertise__title) {
     color: var(--color-accent);
   }
 
@@ -1064,7 +1102,7 @@ textarea {
 }
 
 .special__title {
-  font-size: var(--text-2xl);
+  font-size: var(--text-editorial);
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.015em;
@@ -1077,6 +1115,37 @@ textarea {
   color: var(--color-text-muted);
 }
 
+/* Handwritten aside, tilted −7°, in Muted Gold on the dark block.
+   Mobile: right under the label; desktop: top-right, level with the label. */
+.special__label {
+  order: -2;
+}
+
+/* Mobile / tablet: spans the full width of the dark block under the label.
+   Tilted around its centre, so the lift and drop are split evenly and the
+   vertical margins absorb them. */
+.special__note {
+  order: -1;
+  margin-block: clamp(1.25rem, 4.5vw, 2.25rem) clamp(1.75rem, 6vw, 2.75rem);
+  font-family: var(--font-hand);
+  font-size: clamp(1.375rem, 1.05rem + 1vw, 2rem);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--color-decor);
+  text-wrap: pretty;
+  transform: rotate(-7deg);
+  transform-origin: center;
+}
+
+.special__note-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.special__letter {
+  display: inline;
+}
+
 @media (min-width: 960px) {
   .special {
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
@@ -1085,8 +1154,31 @@ textarea {
   }
 
   .special__label {
-    grid-column: 1 / -1;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
     margin-bottom: var(--space-6);
+  }
+
+  /* Desktop: the whole top row right of the label, up to ~62% of the block.
+     Pivot on the left: the tilt lifts the line's end into the top padding
+     instead of dropping its start towards the title. */
+  .special__note {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    width: min(62%, 44rem);
+    margin: var(--space-6) 0 var(--space-6);
+    transform-origin: left center;
+  }
+
+  .special__title {
+    grid-row: 2;
+  }
+
+  .special__text {
+    grid-row: 2;
   }
 }
 
@@ -1276,7 +1368,7 @@ a.case-card:hover .case-card__placeholder {
 
 .approach__title {
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 1.3rem + 6.4vw, 7.5rem);
+  font-size: var(--text-editorial);
   line-height: 1.02;
   letter-spacing: -0.025em;
 }
@@ -1322,8 +1414,6 @@ a.case-card:hover .case-card__placeholder {
   display: grid;
   align-content: start;
   gap: var(--space-5);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--color-border-strong);
 }
 
 .review__mark {
@@ -1409,10 +1499,16 @@ a.case-card:hover .case-card__placeholder {
    Contact — final CTA on the dark surface
    ========================================================================== */
 
+/* Section 06 sits closer to its neighbours: top and bottom space reduced by
+   the same amount (desktop ~128 → 84px, mobile 72 → 48px). */
+.section.contact {
+  padding-block: clamp(3rem, 1.5rem + 4.2vw, 5.25rem);
+}
+
 .contact__title {
   max-width: 12em;
   margin-bottom: clamp(var(--space-7), 2rem + 4vw, var(--space-9));
-  font-size: var(--text-display);
+  font-size: var(--text-editorial);
   font-weight: 400;
   line-height: 0.98;
   letter-spacing: -0.025em;
@@ -1457,11 +1553,13 @@ a.case-card:hover .case-card__placeholder {
   text-decoration: none;
   overflow-wrap: anywhere;
   background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
-  transition: background-size var(--duration-base) var(--ease-out);
+  transition:
+    color var(--duration-base) var(--ease-out),
+    background-size var(--duration-base) var(--ease-out);
 }
 
-.contact-list__value:hover {
-  color: inherit;
+.contact-list__value:hover,
+.contact-list__value:focus-visible {
   background-size: 100% 1px;
 }
 
@@ -1583,10 +1681,6 @@ textarea.field__input {
   text-decoration: none;
 }
 
-.site-footer a:hover {
-  color: var(--color-text);
-}
-
 .site-footer__links {
   display: flex;
   flex-wrap: wrap;
@@ -1675,7 +1769,7 @@ textarea.field__input {
 }
 
 .case__title {
-  font-size: var(--text-2xl);
+  font-size: var(--text-editorial);
   line-height: var(--leading-tight);
 }
 
@@ -1802,14 +1896,27 @@ textarea.field__input {
     transform: none;
   }
 
-  /* The hero stroke draws itself once the headline is in. */
-  .js .mark__stroke path {
-    stroke-dashoffset: 1;
+  /* The brush sweeps in left to right once the headline is in. */
+  .js .mark__stroke {
+    clip-path: inset(-20% 100% -20% 0);
   }
 
-  .js .is-visible .mark__stroke path {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1.2s var(--ease-out) 0.9s;
+  .js .is-visible .mark__stroke {
+    clip-path: inset(-20% -2% -20% 0);
+    transition: clip-path 0.9s cubic-bezier(0.55, 0.05, 0.3, 1) 0.9s;
+  }
+
+  /* The handwritten aside is written letter by letter, once, when its block
+     first comes into view (.is-visible is set once by the reveal observer). */
+  .js .special__letter {
+    opacity: 0;
+  }
+
+  /* Opacity only — no blur or offset, so every letter ends perfectly sharp
+     and nothing stays on a separate layer after the writing is done. */
+  .js .special.is-visible .special__letter {
+    opacity: 1;
+    transition: opacity 0.28s var(--ease-out) calc(0.7s + var(--i) * 32ms);
   }
 
   /* The monogram settles slowly into place. */
