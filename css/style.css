@@ -313,6 +313,22 @@ textarea {
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   white-space: nowrap;
+  transition:
+    color var(--duration-slow) var(--ease-out),
+    font-weight var(--duration-slow) var(--ease-out);
+}
+
+/* Section being read (js/main.js → initSectionIndicator): only the title
+   changes — Emerald and a step bolder (Manrope is loaded as a variable font,
+   so the weight eases too). Number and gold rules stay as they are. */
+.section-header.is-current .section-header__title {
+  color: var(--color-emerald);
+  font-weight: 700;
+}
+
+/* Sections receive focus after an in-page link; no outline on the whole block. */
+main > section:focus {
+  outline: none;
 }
 
 /* Full row so it always wraps under the marker; the text itself stays ~28rem wide. */

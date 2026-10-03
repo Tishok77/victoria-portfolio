@@ -71,6 +71,100 @@
     desktopNav.addEventListener('change', () => setOpen(false));
   }
 
+  /* ---- Start position & in-page links ---- */
+
+  // A plain visit or a reload always starts at the hero: the browser's own
+  // scroll restoration is off, and in-page links (below) never write a #hash
+  // into the address, so a later reload cannot land on a section. A URL that
+  // is opened with an explicit #hash (a shared link, «← Все кейсы» on a case
+  // page) still lands on that section.
+  function initScrollStart() {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    const entry = performance.getEntriesByType('navigation')[0];
+    const type = entry ? entry.type : 'navigate';
+    if (window.location.hash && type === 'navigate') return;
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    // Repeat once on load (fonts and rendered content change the layout), but
+    // never pull the page back once the visitor has started scrolling.
+    let touched = false;
+    ['wheel', 'touchstart', 'keydown'].forEach((name) => {
+      window.addEventListener(name, () => { touched = true; }, { once: true, passive: true });
+    });
+    const toTop = () => {
+      if (!touched) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    };
+    toTop();
+    window.addEventListener('load', toTop, { once: true });
+  }
+
+  // In-page links scroll to their section without adding #hash to the URL.
+  // Focus moves to the section, as with native anchor navigation.
+  function initInPageLinks() {
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[href^="#"]');
+      if (!link || event.defaultPrevented || event.button !== 0
+        || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const id = decodeURIComponent(link.getAttribute('href').slice(1));
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    });
+  }
+
+  /* ---- Current section indicator ---- */
+
+  // The marker of the section being read («01 ─ ОБО МНЕ ───») turns Emerald
+  // and a step bolder (CSS: .section-header.is-current). The current section
+  // is the last one whose top has passed a reading line at 40% of the
+  // viewport height — measured from the real section boxes on every frame of
+  // scrolling, so it works the same on desktop, tablet and phone. A switch
+  // needs the boundary to be crossed by HYSTERESIS px, so resting right on
+  // the border between two sections never flickers. At the very bottom of
+  // the page the last section is current. In the hero, none is.
+  function initSectionIndicator() {
+    const sections = [...document.querySelectorAll('main > section')]
+      .filter((section) => section.querySelector('.section-header'));
+    if (!sections.length) return;
+    const headers = sections.map((section) => section.querySelector('.section-header'));
+    const HYSTERESIS = 24;
+    let current = -1;
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.4;
+      const tops = sections.map((section) => section.getBoundingClientRect().top);
+      let next = -1;
+      tops.forEach((top, index) => {
+        if (top <= line) next = index;
+      });
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) next = sections.length - 1;
+      if (next === current) return;
+      if (!atBottom) {
+        const crossed = next > current
+          ? tops[next] <= line - HYSTERESIS
+          : tops[current] > line + HYSTERESIS;
+        if (!crossed) return;
+      }
+      current = next;
+      headers.forEach((header, index) => header.classList.toggle('is-current', index === current));
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule, { once: true });
+  }
+
   /* ---- Site content ---- */
 
   function renderContacts(contacts) {
@@ -457,7 +551,7 @@
       }
 
       if (!VM.config.features.leadForm) {
-        status.textContent = 'Онлайн-отправка заявок скоро заработает. Пока быстрее всего написать в Telegram — контакты рядом.';
+        status.textContent = 'Онлайн-отправка заявок скоро заработает. Пока быстрее всего написать в Telegram — контакты рядом';
         return;
       }
 
@@ -470,10 +564,10 @@
         await VM.api.submitLead(lead);
         form.reset();
         fields.forEach((input) => input.removeAttribute('aria-invalid'));
-        status.textContent = 'Спасибо! Сообщение отправлено.';
+        status.textContent = 'Спасибо! Сообщение отправлено';
       } catch (error) {
         console.warn('Lead submission failed:', error.message);
-        status.textContent = 'Не удалось отправить сообщение. Попробуйте ещё раз или свяжитесь со мной напрямую.';
+        status.textContent = 'Не удалось отправить сообщение. Попробуйте ещё раз или свяжитесь со мной напрямую';
       } finally {
         sending = false;
         submit.disabled = false;
@@ -488,6 +582,8 @@
     });
   }
 
+  initScrollStart();
+  initInPageLinks();
   initHeader();
   initNav();
   setCurrentYear();
@@ -496,4 +592,5 @@
   renderSiteContent();
   renderCases();
   renderReviews();
+  initSectionIndicator();
 })(window.VM);

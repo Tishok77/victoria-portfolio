@@ -12,7 +12,7 @@
     { key: 'implementation', title: 'Реализация' },
     { key: 'result', title: 'Результат' }
   ];
-  const PENDING_TEXT = 'Материал будет добавлен.';
+  const PENDING_TEXT = 'Материал будет добавлен';
 
   function figure(media, className) {
     const node = el('figure', className);
@@ -36,7 +36,7 @@
   function renderNotFound(root) {
     root.replaceChildren(
       el('h1', 'case__title', 'Кейс не найден'),
-      el('p', 'case__summary', 'Возможно, ссылка устарела. Посмотрите другие кейсы на главной странице.')
+      el('p', 'case__summary', 'Возможно, ссылка устарела. Посмотрите другие кейсы на главной странице')
     );
   }
 
