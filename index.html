@@ -22,6 +22,7 @@
   <script src="content/reviews.js" defer></script>
   <script src="js/dom.js" defer></script>
   <script src="js/api.js" defer></script>
+  <script src="https://feedbackcloud.kupiapp.ru/widget/widget.js" defer></script>
   <script src="js/main.js" defer></script>
 </head>
 <body>
@@ -153,20 +154,66 @@
           <span class="section-header__index">05</span>
           <h2 class="section-header__title" id="reviews-title">Отзывы</h2>
         </header>
-        <div class="reviews-list" data-reviews-list>
-          <!-- Placeholder mirrors the future review layout; replaced once content/reviews.js has published items. -->
-          <figure class="review review--placeholder" data-reveal>
-            <span class="review__mark" aria-hidden="true">“</span>
-            <p class="review__text">Отзывы появятся здесь после согласования с&nbsp;клиентами</p>
-            <figcaption class="review__author" aria-hidden="true">
-              <span class="review__photo"></span>
-              <span class="review__who">
-                <span class="review__skeleton"></span>
-                <span class="review__skeleton review__skeleton--wide"></span>
-              </span>
-            </figcaption>
-          </figure>
+        <div class="reviews-editorial">
+          <!-- Keep real recommendations and letters distinct; add their content when approved. -->
+          <article class="reviews-editorial__group" aria-labelledby="recommendations-title">
+            <div class="reviews-editorial__index"><span>01</span><span>Коллеги и партнёры</span></div>
+            <div class="reviews-editorial__body">
+              <h3 class="reviews-editorial__title" id="recommendations-title">Рекомендации</h3>
+              <p class="reviews-editorial__note">Письменные рекомендации публикуются с разрешения авторов.</p>
+              <div class="reviews-list" data-review-items></div>
+            </div>
+          </article>
+          <article class="reviews-editorial__group reviews-editorial__group--letters" aria-labelledby="letters-title">
+            <div class="reviews-editorial__index"><span>02</span><span>Документы</span></div>
+            <div class="reviews-editorial__body">
+              <h3 class="reviews-editorial__title" id="letters-title">Благодарственные письма</h3>
+              <p class="reviews-editorial__note">Пять документов о сотрудничестве и совместной работе.</p>
+              <div class="review-letters" aria-label="Благодарственные и рекомендательные письма">
+                <figure class="review-letter">
+                  <a class="review-letter__image-link" href="assets/images/reviews/idea-print.webp" target="_blank" rel="noopener" aria-label="Открыть письмо ИдеяПринт в полном размере">
+                    <img class="review-letter__image" src="assets/images/reviews/idea-print.webp" alt="Благодарственное письмо ООО «Скоростная Цифровая Типография», адресованное Виктории Мыльниковой; подпись и печать" loading="lazy">
+                  </a>
+                  <figcaption class="review-letter__caption"><span>ИдеяПринт</span><span>Подписал Попов С. В.</span></figcaption>
+                </figure>
+                <figure class="review-letter">
+                  <a class="review-letter__image-link" href="assets/images/reviews/internest.webp" target="_blank" rel="noopener" aria-label="Открыть письмо Internest в полном размере">
+                    <img class="review-letter__image" src="assets/images/reviews/internest.webp" alt="Благодарственное письмо компании Internest с подписью и печатью" loading="lazy">
+                  </a>
+                  <figcaption class="review-letter__caption"><span>Internest</span><span>Директор отдела продаж А. Н. Галумян</span></figcaption>
+                </figure>
+                <figure class="review-letter">
+                  <a class="review-letter__image-link" href="assets/images/reviews/pmg.webp" target="_blank" rel="noopener" aria-label="Открыть письмо ПМГ в полном размере">
+                    <img class="review-letter__image" src="assets/images/reviews/pmg.webp" alt="Благодарственное письмо ООО «ПМГ» с подписью генерального директора и печатью" loading="lazy">
+                  </a>
+                  <figcaption class="review-letter__caption"><span>ПМГ</span><span>Генеральный директор Е. А. Емельянова</span></figcaption>
+                </figure>
+                <figure class="review-letter">
+                  <a class="review-letter__image-link" href="assets/images/reviews/uken.webp" target="_blank" rel="noopener" aria-label="Открыть письмо Юкэн в полном размере">
+                    <img class="review-letter__image" src="assets/images/reviews/uken.webp" alt="Рекомендательное письмо ООО «Юкэн» от 25 января 2014 года, подписанное генеральным директором Анной Медведевой; печать" loading="lazy">
+                  </a>
+                  <figcaption class="review-letter__caption"><span>Юкэн</span><span>Генеральный директор Анна Алексеевна Медведева · 25 января 2014</span></figcaption>
+                </figure>
+                <figure class="review-letter">
+                  <a class="review-letter__image-link" href="assets/images/reviews/trade-dealer.webp" target="_blank" rel="noopener" aria-label="Открыть письмо TradeDealer в полном размере">
+                    <img class="review-letter__image" src="assets/images/reviews/trade-dealer.webp" alt="Благодарность от команды TradeDealer от 4 декабря 2025 года с подписью генерального директора Д. Н. Первухина и печатью" loading="lazy">
+                  </a>
+                  <figcaption class="review-letter__caption"><span>TradeDealer</span><span>Генеральный директор Д. Н. Первухин · 4 декабря 2025</span></figcaption>
+                </figure>
+              </div>
+            </div>
+          </article>
         </div>
+        <section class="reviews-vk" aria-labelledby="reviews-vk-title">
+          <div class="reviews-vk__heading">
+            <div class="reviews-editorial__index reviews-vk__index"><span>03</span><span>ВКонтакте</span></div>
+            <h3 class="reviews-vk__title" id="reviews-vk-title">Отзывы клиентов</h3>
+          </div>
+          <div class="reviews-vk__content">
+            <div id="feedback_vk" class="reviews-vk__widget" aria-live="polite" aria-busy="true"></div>
+            <p class="reviews-vk__status" data-vk-reviews-status role="status">Загружаем отзывы ВКонтакте…</p>
+          </div>
+        </section>
       </div>
     </section>
 

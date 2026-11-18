@@ -473,7 +473,17 @@
     const figure = el('figure', 'review');
     const mark = el('span', 'review__mark', '“');
     mark.setAttribute('aria-hidden', 'true');
-    figure.append(mark, el('blockquote', 'review__text', item.text));
+    figure.append(mark);
+    if (item.text.length > 300) {
+      const excerptEnd = item.text.lastIndexOf(' ', 220);
+      figure.append(el('blockquote', 'review__text review__text--excerpt', `${item.text.slice(0, excerptEnd > 120 ? excerptEnd : 220).trim()}…`));
+      const details = el('details', 'review__details');
+      details.append(el('summary', 'review__more', 'Читать рекомендацию полностью'));
+      details.append(el('blockquote', 'review__text review__text--full', item.text));
+      figure.append(details);
+    } else {
+      figure.append(el('blockquote', 'review__text', item.text));
+    }
 
     const author = el('figcaption', 'review__author');
     if (item.photo) author.append(image(item.photo, 'review__photo'));
@@ -481,6 +491,7 @@
     who.append(el('span', 'review__name', item.author));
     const position = [item.position, item.company].filter(Boolean).join(', ');
     if (position) who.append(el('span', 'review__position', position));
+    if (item.date) who.append(el('span', 'review__date', item.date));
     if (item.source) {
       const source = el(item.source.url ? 'a' : 'span', 'review__source', item.source.label);
       if (item.source.url) {
@@ -496,12 +507,66 @@
   }
 
   async function renderReviews() {
-    const root = document.querySelector('[data-reviews-list]');
+    const root = document.querySelector('[data-review-items]');
     if (!root) return;
     const reviews = await VM.api.getReviews();
-    if (!reviews.length) return; // keep the placeholder from the markup
+    if (!reviews.length) return;
     root.replaceChildren(...reviews.map(review));
+    const note = root.parentElement.querySelector('.reviews-editorial__note');
+    if (note) note.hidden = true;
     reveal(root.children, { step: 80 });
+  }
+
+  /* ---- VK reviews widget ---- */
+
+  function initVkReviews() {
+    const container = document.getElementById('feedback_vk');
+    if (!container || container.dataset.initialized === 'true' || container.dataset.loading === 'true') return;
+    const status = document.querySelector('[data-vk-reviews-status]');
+    const widget = window.feedback_vk;
+    const setStatus = (message, failed = false) => {
+      container.setAttribute('aria-busy', 'false');
+      if (!status) return;
+      status.hidden = !failed && !message;
+      if (message) status.textContent = message;
+      status.classList.toggle('is-error', failed);
+    };
+
+    if (!widget || typeof widget.init !== 'function') {
+      setStatus('Отзывы ВКонтакте сейчас недоступны. Попробуйте открыть страницу позже.', true);
+      console.warn('VK reviews widget API is unavailable; its deferred script did not load.');
+      return;
+    }
+
+    container.dataset.loading = 'true';
+    container.dataset.initialized = 'true';
+    let settled = false;
+    const finish = (message, failed = false) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeout);
+      observer.disconnect();
+      delete container.dataset.loading;
+      setStatus(message, failed);
+    };
+    const observer = new MutationObserver(() => {
+      if (!container.childElementCount || !container.textContent.trim()) return;
+      finish();
+    });
+    observer.observe(container, { childList: true, subtree: true });
+    const timeout = window.setTimeout(() => {
+      finish('Не удалось получить отзывы ВКонтакте. Попробуйте открыть страницу позже.', true);
+      console.warn('VK reviews widget timed out before returning review markup.');
+    }, 15000);
+
+    try {
+      // The vendor's init() starts its own asynchronous XHR and returns no promise/callback.
+      // Its script is deferred before main.js, so the container and API both exist here.
+      widget.init({ id: 'feedback_vk', gid: 241430939, count: 5 });
+    } catch (error) {
+      finish('Не удалось загрузить отзывы ВКонтакте. Попробуйте открыть страницу позже.', true);
+      console.warn('VK reviews widget initialization failed:', error.message);
+    }
   }
 
   /* ---- Lead form ---- */
@@ -592,5 +657,6 @@
   renderSiteContent();
   renderCases();
   renderReviews();
+  initVkReviews();
   initSectionIndicator();
 })(window.VM);

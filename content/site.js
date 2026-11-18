@@ -54,7 +54,10 @@ window.VM.content.site = {
     ],
     ctaPrimary: { label: 'Обсудить задачу', href: '#contact' },
     ctaSecondary: { label: 'Смотреть кейсы', href: '#cases' },
-    portrait: null
+    portrait: {
+      src: 'assets/images/victoria-portrait-IMG_9920.webp',
+      alt: 'Виктория Мыльникова в сером костюме'
+    }
   },
 
   about: {
